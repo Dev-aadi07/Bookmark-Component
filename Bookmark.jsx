@@ -9,16 +9,25 @@ function Bookmark() {
   const [loaded, setLoaded] = useState(false);
 
 
-  const isValidUrl=(str)=>{
-    return str.startsWith("http://") || str.startsWith("https://");
+  // const isValidUrl=(str)=>{
+  //   return str.startsWith("http://") || str.startsWith("https://");
+  // };
+
+  const formatUrl = (str) => {
+    if(str.startsWith("http://") || str.startsWith("https://")){
+      return str;
+    }
+    return `https://${str}`;
   };
   const addBookmark = () =>{
     if(bookmarkName.trim()!=='' && url.trim()!=='') {
-      if (!isValidUrl(url.trim())) {
-        alert("Please enter a valid URL starting with https://");
-        return;
-      }
-      setBookMarkList(prev=>([...prev,{text:bookmarkName, loc:url}]));
+      // if (!isValidUrl(url.trim())) {
+      //   alert("Please enter a valid URL starting with https://");
+      //   return;
+      // }
+
+      const formattedUrl = formatUrl(url.trim());
+      setBookMarkList(prev=>([...prev,{text:bookmarkName, loc:formattedUrl}]));
       setBookMarkName('');
       setUrl('');
     }
@@ -72,8 +81,10 @@ function Bookmark() {
         <ul>
           {bookmarkList.map((item, index)=> (
             <li key={index}>
-              <span>📌</span>
-              <span>{item.text}</span>
+              <span>
+                <span>📌</span>
+                <span>{item.text}</span>
+              </span>
               <div className="btn-container">
                 <button onClick={()=>handleVisit(index)}>Visit</button>
                 <button onClick={()=>handleDelete(index)}>Delete</button>
